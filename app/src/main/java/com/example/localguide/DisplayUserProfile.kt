@@ -25,8 +25,14 @@ class DisplayUserProfile : AppCompatActivity() {
 
                 if(dataSnapshot?.exists()) {
                     val uid = intent.getStringExtra(SigninActivity.EXTRA_UID)
-                    val user = dataSnapshot.child("bwRkRbl8PlMcXamlIWs02S2eDi02").getValue(User::class.java)
-                    textViewUserName.text = user?.name
+                    //val user = dataSnapshot.child(uid).getValue()
+                    //textViewUserName.text = user?.name
+                    for(u: DataSnapshot in dataSnapshot.children.iterator()) {
+                        if(u.key!!.equals(uid)) {
+                            textViewUserName.text = String.format("Name  : %s",  u.child("name").getValue())
+                            break
+                        }
+                    }
                 }
                 else {
                     Toast.makeText(applicationContext,"Sorry, record not found", Toast.LENGTH_SHORT).show()
