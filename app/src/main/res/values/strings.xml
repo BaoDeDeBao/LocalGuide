@@ -22,5 +22,6 @@
     <string name="send">Send</string>
     <string name="role_selection">Travel or Guide? Please select : </string>
     <string name="traveler">Traveler</string>
+    <string name="signup_guide">Sign up as Guide</string>
     <string name="guide">Guide</string>
 </resources>

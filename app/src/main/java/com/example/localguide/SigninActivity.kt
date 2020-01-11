@@ -4,18 +4,22 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_signin.*
 import android.widget.Toast
 import com.google.firebase.auth.AuthResult
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_display_user_profile.*
 
 
 class SigninActivity : AppCompatActivity() {
 
     private val mAuth = FirebaseAuth.getInstance()
     private val user = mAuth.currentUser
+    private lateinit var databaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +50,44 @@ class SigninActivity : AppCompatActivity() {
                     if (task.isSuccessful()) {
                         progressDialog.dismiss()
                         Toast.makeText(applicationContext, "Signed In", Toast.LENGTH_SHORT).show()
-                        if(user != null) {
-                            val uid= user.uid
+
+                        databaseRef = FirebaseDatabase.getInstance().getReference("User")
+
+                        databaseRef.addValueEventListener(object : ValueEventListener {
+
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                                if(dataSnapshot?.exists()) {
+                                    val uid = intent.getStringExtra(SigninActivity.EXTRA_UID)
+                                    //val user = dataSnapshot.child(uid).getValue()
+                                    //textViewUserName.text = user?.name
+                                    for(u: DataSnapshot in dataSnapshot.children.iterator()) {
+                                        if(u.child(uid).child("role").getValue()!!.equals("Traveler")) {
+                                            Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
+                                            break
+                                        }
+                                        else if(u.child(uid).child("role").getValue()!!.equals("Guide")) {
+                                            Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
+                                            break
+                                        }
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(applicationContext,"Sorry, record not found", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Toast.makeText(applicationContext,"Sorry, record not found", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+
+                        //if(user != null) {
+                            //val uid= user.uid
                             //Toast.makeText(applicationContext, uid, Toast.LENGTH_SHORT).show()
-                            intent.putExtra(EXTRA_UID, uid)
-                            startActivity(intent)
-                        }
+                            //intent.putExtra(EXTRA_UID, uid)
+                            //startActivity(intent)
+                        //}
                     } else {
                         progressDialog.dismiss()
                         Toast.makeText(applicationContext, "Sorry", Toast.LENGTH_SHORT).show()

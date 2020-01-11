@@ -30,7 +30,7 @@ class DisplayUserProfile : AppCompatActivity() {
                     for(u: DataSnapshot in dataSnapshot.children.iterator()) {
                         if(u.key!!.equals(uid)) {
                             textViewUserName.text = String.format("Name  : %s",  u.child("name").getValue())
-                            break
+                            return
                         }
                     }
                 }
