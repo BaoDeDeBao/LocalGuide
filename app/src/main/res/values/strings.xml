@@ -20,4 +20,7 @@
     <string name="resend_password">Forgot password ?</string>
     <string name="enter_email">Please enter your email</string>
     <string name="send">Send</string>
+    <string name="role_selection">Travel or Guide? Please select : </string>
+    <string name="traveler">Traveler</string>
+    <string name="guide">Guide</string>
 </resources>
