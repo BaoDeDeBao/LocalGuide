@@ -49,7 +49,7 @@ class SigninActivity : AppCompatActivity() {
                 override fun onComplete(task: Task<AuthResult>) {
                     if (task.isSuccessful()) {
                         progressDialog.dismiss()
-                        Toast.makeText(applicationContext, "Signed In", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(applicationContext, "Signed In", Toast.LENGTH_SHORT).show()
 
                         databaseRef = FirebaseDatabase.getInstance().getReference("User")
 
@@ -62,13 +62,28 @@ class SigninActivity : AppCompatActivity() {
                                     //val user = dataSnapshot.child(uid).getValue()
                                     //textViewUserName.text = user?.name
                                     for(u: DataSnapshot in dataSnapshot.children.iterator()) {
-                                        if(u.child(uid).child("role").getValue()!!.equals("Traveler")) {
-                                            Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
-                                            break
-                                        }
-                                        else if(u.child(uid).child("role").getValue()!!.equals("Guide")) {
-                                            Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
-                                            break
+                                        //if(u.child("role").equals("Traveler")) {
+                                            //Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
+                                           // break
+                                        //}
+                                        val uid= user!!.uid
+
+                                        if(u.key!!.equals(uid)) {
+                                            //Log.d("SigninActivity", String.format("Role  : %s",  u.child("role").getValue()))
+                                            if(u.child("role").getValue()!!.equals("Traveler")) {
+                                                Toast.makeText(applicationContext,"Traveler", Toast.LENGTH_SHORT).show()
+                                                //if(user != null) {
+                                                //intent.putExtra(EXTRA_UID, uid)
+                                                //startActivity(intent)
+                                                //}
+                                            }
+                                            else if(u.child("role").getValue()!!.equals("Guide")) {
+                                                Toast.makeText(applicationContext,"Guide", Toast.LENGTH_SHORT).show()
+                                                //if(user != null) {
+                                                    //intent.putExtra(EXTRA_UID, uid)
+                                                    //startActivity(intent)
+                                                //}
+                                            }
                                         }
                                     }
                                 }
